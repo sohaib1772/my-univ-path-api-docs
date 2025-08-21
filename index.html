@@ -149,8 +149,14 @@
   "message":"تم الدخول",
   "token":"sanctum_token",
   "errors":null,
-  "activated":true,
-  "role":"user"
+  "user": {
+    "email": "user@example.com",
+    "gender": "ذكر",
+    "branch": "علمي",
+    "average": 90.5,
+    "activated": true,
+    "role": "user"
+  },
 }</pre>
     </div>
 
@@ -168,8 +174,14 @@
   "message":"تم الدخول",
   "token":"sanctum_token",
   "errors":null,
-  "activated":true,
-  "role":"admin"
+  "user": {
+    "email": "user@example.com",
+    "gender": "ذكر",
+    "branch": "علمي",
+    "average": 90.5,
+    "activated": true,
+    "role": "user"
+  },
 }</pre>
     </div>
 
@@ -230,8 +242,6 @@ Authorization: Bearer YOUR_SANCTUM_TOKEN
       <pre>{
   "message": "تم جلب بيانات المستخدم بنجاح",
   "user": {
-    "id": 12,
-    "name": "محمد أحمد",
     "email": "user@example.com",
     "gender": "ذكر",
     "branch": "علمي",
@@ -430,6 +440,7 @@ Authorization: Bearer YOUR_SANCTUM_TOKEN
   </div>
 </body>
 </html>
+
 
 
 
