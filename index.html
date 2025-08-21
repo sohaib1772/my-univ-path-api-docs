@@ -196,11 +196,31 @@
       <div class="endpoint-url">api/set-user-information</div>
       <pre>{
   "average":90.5,
-  "gender":"ذكر",
-  "branch":"علمي"
+  "gender": 1, //male
+  "branch": 1 // branch id
 }</pre>
     </div>
-
+<!-- USER INFO -->
+    <div class="endpoint">
+      <h2>🔹 الفروع </h2>
+      <div class="desc">
+       طلب الفروع المتاحة ليتمكن الطالب من اختيارها 
+      </div>
+      <span class="method GET">GET</span>
+      <div class="endpoint-url">api/set-user-information</div>
+      <pre>{
+ [
+        {
+        "id":1,
+        "name":"علمي",
+        },
+        {
+        "id":2,
+        "name":"ادبي",
+        }
+        ]
+}</pre>
+    </div>
     <!-- GET USER -->
     <div class="endpoint">
       <h2>🔹 جلب بيانات المستخدم حسب التوكن</h2>
@@ -430,4 +450,5 @@ Authorization: Bearer YOUR_SANCTUM_TOKEN
   </div>
 </body>
 </html>
+
 
