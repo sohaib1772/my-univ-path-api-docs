@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My University Path - API Docs</title>
+  <style>
+    body {
+      font-family: "Cairo", sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 1100px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    h2 { font-size: 16px; margin: 15px 0 10px; }
+    h3 { font-size: 14px; margin: 10px 0 5px; }
+    p, li { font-size: 13px; }
+    .endpoint {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-bottom: 18px;
+      padding: 15px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .method {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+    .POST { background: #28a745; }
+    .GET { background: #007bff; }
+    .PUT { background: #fd7e14; }
+    .DELETE { background: #dc3545; }
+    .endpoint-url {
+      margin: 6px 0;
+      padding: 6px 10px;
+      background: #eef6ff;
+      border: 1px solid #cddff7;
+      border-radius: 4px;
+      font-size: 12px;
+      direction: ltr;
+      color: #0056b3;
+    }
+    pre {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      overflow-x: auto;
+    }
+    .desc {
+      background: #1e1e1e;
+      color: #f8f8f2;
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin: 10px 0;
+      line-height: 1.6;
+      direction: rtl;
+      text-align: right;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📘 My University Path - API Documentation</h1>
+
+    <!-- SAVE GUEST FCM -->
+    <div class="endpoint">
+      <h2>🔹 حفظ FCM للضيف</h2>
+      <div class="desc">
+        هذا الـ API مسؤول عن تخزين رمز الـ FCM الخاص بالمستخدمين غير المسجلين عند فتح التطبيق لأول مرة،
+        بحيث يمكن إرسال إشعارات لهم حتى لو لم يمتلكوا حساب. عند تسجيل حساب جديد يتم حذف هذا الرمز وربطه
+        مباشرة بالمستخدم داخل قاعدة البيانات.
+        
+          <br></br>
+          يتم الاستفادة من هذا الشيء عن طريق ارسال اشعارات تذكيرية للمستخدمين الغير مسجلين ليتم تذكيرهم بالتسجيل
+          و في حال سجل المستخدم يتم حذف الكود من الجدول و تضمينه داخل اليوزر نفسه ليتم ارسال اشعارات مختلفة عن اشعارات تذكير التسجيل
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/save-fcm</div>
+      <pre>{ "fcm": "FCM_TOKEN", "device_id": "DEVICE_ID" }</pre>
+      <pre>{ "message": "تم الحفظ بنجاح" }</pre>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="endpoint">
+      <h2>🔹 التسجيل العادي</h2>
+      <div class="desc">
+        هذا الـ API يُستخدم لتسجيل مستخدم جديد باستخدام البريد الإلكتروني وكلمة المرور، ويجب تمرير
+        رمز الـ FCM ليتم ربط الإشعارات بالمستخدم بعد إنشاء الحساب. الرد يحتوي على رسالة نجاح أو خطأ،
+        رمز الـ Sanctum لتوثيق الجلسات، وأي أخطاء في التحقق من البيانات.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/register</div>
+      <pre>{
+  "email":"user@example.com",
+  "password":"12345678",
+  "password_confirmation":"12345678",
+}</pre>
+      <pre>{
+  "message":"تم التسجيل",
+  "token":"sanctum_token",
+  "errors":null
+}</pre>
+    </div>
+
+    <!-- REGISTER WITH GOOGLE -->
+    <div class="endpoint">
+      <h2>🔹 التسجيل عبر Google</h2>
+      <div class="desc">
+        يُستخدم لتسجيل المستخدمين عن طريق حساب Google، حيث يتم تمرير idToken الخاص بحساب Google
+        مع رمز الـ FCM ليتم ربطه بالمستخدم. الرد يحتوي على رسالة نجاح أو خطأ ورمز الجلسة وأي مشاكل
+        في التحقق من البيانات.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/access-with-google</div>
+      <pre>{
+  "idToken":"GOOGLE_TOKEN", 
+}</pre>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="endpoint">
+      <h2>🔹 تسجيل الدخول</h2>
+      <div class="desc">
+        يُستخدم لتسجيل دخول المستخدمين المسجلين بواسطة البريد الإلكتروني وكلمة المرور. الرد يتضمن
+        رسالة النجاح أو الخطأ، رمز الجلسة، حالة التفعيل، الدور الخاص بالمستخدم، وأي أخطاء تحقق من البيانات.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/login</div>
+      <pre>{ "email":"user@example.com", "password":"12345678" }</pre>
+      <pre>{
+  "message":"تم الدخول",
+  "token":"sanctum_token",
+  "errors":null,
+  "activated":true,
+  "role":"user"
+}</pre>
+    </div>
+
+    <!-- LOGIN WITH GOOGLE -->
+    <div class="endpoint">
+      <h2>🔹 تسجيل الدخول عبر Google</h2>
+      <div class="desc">
+        يُستخدم لتسجيل دخول المستخدمين عن طريق حساب Google، حيث يتم تمرير idToken للتحقق من الحساب.
+        الرد يحتوي على رسالة النجاح، رمز الجلسة، حالة التفعيل، والدور الخاص بالمستخدم.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/access-with-google</div>
+      <pre>{ "idToken":"GOOGLE_TOKEN" }</pre>
+      <pre>{
+  "message":"تم الدخول",
+  "token":"sanctum_token",
+  "errors":null,
+  "activated":true,
+  "role":"admin"
+}</pre>
+    </div>
+
+    <!-- ACTIVATION -->
+    <div class="endpoint">
+      <h2>🔹 تفعيل الحساب</h2>
+      <div class="desc">
+        يُستخدم لتفعيل حساب المستخدم بعد التسجيل عن طريق تمرير كود التفعيل. هذا الـ API يتطلب
+        أن يكون المستخدم مسجلاً وحاصلاً على رمز الجلسة. الرد يحتوي على رسالة النجاح أو الفشل.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/activation</div>
+      <pre>{ "activation_code":"123456" }</pre>
+    </div>
+
+    <!-- USER INFO -->
+    <div class="endpoint">
+      <h2>🔹 معلومات الطالب</h2>
+      <div class="desc">
+        يُستخدم لتخزين بيانات الطالب الأساسية مثل المعدل، الجنس، والتخصص. هذه البيانات تساعد في
+        تخصيص الكليات والنتائج حسب وضع الطالب الأكاديمي. الرد يحتوي على رسالة نجاح أو فشل العملية.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/set-user-information</div>
+      <pre>{
+  "average":90.5,
+  "gender":"ذكر",
+  "branch":"علمي"
+}</pre>
+    </div>
+
+    <!-- GET USER -->
+    <div class="endpoint">
+      <h2>🔹 جلب بيانات المستخدم حسب التوكن</h2>
+      <div class="desc">
+        يُستخدم هذا الـ API للتحقق من حالة المستخدم الحالي باستخدام التوكن المرسل. عند فتح التطبيق، إذا كان التوكن محفوظًا داخل التطبيق،
+        يتم إرساله لهذا الـ API للتحقق مما يلي:
+        <ul>
+          <li>هل التوكن صالح؟</li>
+          <li>هل المستخدم موجود في قاعدة البيانات؟</li>
+          <li>هل حساب المستخدم مفعل؟</li>
+        </ul>
+        إذا كان التوكن غير صالح أو لا يوجد المستخدم المرتبط به، يجب إعادة توجيه المستخدم إلى صفحة تسجيل الدخول لتسجيل حساب جديد أو إعادة تسجيل الدخول.
+      </div>
+      <span class="method GET">GET</span>
+      <div class="endpoint-url">api/get-user</div>
+      <div class="desc">
+        مثال على الطلب:
+      </div>
+      <pre>
+GET /api/get-user
+Headers:
+Authorization: Bearer YOUR_SANCTUM_TOKEN
+      </pre>
+      <div class="desc">
+        مثال على الرد في حال كان المستخدم موجود ومفعل:
+      </div>
+      <pre>{
+  "message": "تم جلب بيانات المستخدم بنجاح",
+  "user": {
+    "id": 12,
+    "name": "محمد أحمد",
+    "email": "user@example.com",
+    "gender": "ذكر",
+    "branch": "علمي",
+    "average": 90.5,
+    "activated": true,
+    "role": "user"
+  },
+  "errors": null
+}</pre>
+      <div class="desc">
+        مثال على الرد في حال كان التوكن غير صالح أو المستخدم غير موجود:
+      </div>
+      <pre>{
+  "message": "المستخدم غير موجود أو التوكن غير صالح",
+  "user": null,
+  "errors": ["يجب تسجيل الدخول"]
+}</pre>
+    </div>
+
+    <!-- HOME -->
+    <div class="endpoint">
+      <h2>🔹 الصفحة الرئيسية (الكليات) مع Pagination مبسط</h2>
+      <div class="desc">
+        تعرض الصفحة الرئيسية قائمة الكليات المتاحة للمستخدمين المسجلين والضيوف. لكل كلية تُعرض
+        معلومات مثل اسم الجامعة، اسم الكلية، الأقسام، ومتطلبات القبول لكل سنة. يتم تقسيم النتائج على صفحات.
+      </div>
+      <span class="method GET">GET</span>
+      <div class="endpoint-url">api/get-colleges</div>
+      <div class="endpoint-url">api/public/get-colleges (ضيف)</div>
+      <pre>{
+  "currentPage": 1,
+  "totalPages": 10,
+  "data": [
+    { 
+      "universityName":"جامعة بغداد", 
+      "collegeName":"كلية الآداب", 
+      "isSaved":false, 
+      "departments":["قسم اللغة العربية"], 
+      "admissions":[{ "year":2024, "minAverage":64.2 }]
+    },
+    { 
+      "universityName":"جامعة بغداد", 
+      "collegeName":"كلية العلوم", 
+      "isSaved":true, 
+      "departments":["قسم الكيمياء","قسم الفيزياء"], 
+      "admissions":[{ "year":2024, "minAverage":65.0 }]
+    }
+  ]
+}</pre>
+      <div class="desc">
+        يمكن استخدام query parameter <code>?page=2</code> للوصول للصفحات التالية.
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="endpoint">
+      <h2>🔹 البحث مع Pagination مبسط</h2>
+      <div class="desc">
+        يُتيح هذا الـ API البحث عن الكليات حسب المعدل أو المحافظات أو التخصصات. يتم تقسيم النتائج على صفحات.
+      </div>
+      <span class="method POST">GET</span>
+      <div class="endpoint-url">api/colleges-search</div>
+      <div class="endpoint-url">api/public-colleges-search</div>
+      <pre>{
+  "currentPage": 1,
+  "totalPages": 5,
+  "data": [
+    {
+      "universityName":"جامعة بغداد",
+      "collegeName":"كلية الطب",
+      "departments":["قسم الطب البشري"],
+      "admissions":[{"year":2024,"minAverage":88}]
+    }
+  ]
+}</pre>
+    </div>
+
+    <!-- SAVED COLLEGES -->
+    <div class="endpoint">
+      <h2>🔹 المسودة</h2>
+      <div class="desc">
+        يُستخدم لتخزين الكليات المفضلة لدى الطلاب المسجلين. يمكن إضافة كلية للمسودة أو حذفها لاحقاً.
+        يمكن أيضاً عرض كل الكليات المحفوظة مسبقاً للمستخدم المسجل.
+      </div>
+      <span class="method GET">GET</span>
+      <div class="endpoint-url">api/get-save-colleges</div>
+      <span class="method POST">POST</span> <span class="method DELETE">DELETE</span>
+      <div class="endpoint-url">api/saved-colleges/{id}</div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="endpoint">
+      <h2>🔹 المقالات</h2>
+      <div class="desc">
+        يُستخدم لجلب قائمة الأخبار أو المقالات التعليمية المتاحة للمستخدمين والضيوف. لكل مقالة
+        يُعرض العنوان، محتوى المقالة، الصورة المصاحبة، وعدد المشاهدات.
+      </div>
+      <span class="method GET">GET</span>
+      <div class="endpoint-url">api/public/content</div>
+      <pre>{
+  "currentPage": 1,
+  "totalPages": 3,
+  "data":[ { "title":"...", "body":"...", "image":"...", "viewers":12 } ]
+}</pre>
+    </div>
+
+    <!-- Views -->
+    <div class="endpoint">
+      <h2>🔹 مشاهدات المقال</h2>
+      <div class="desc">
+        يُستخدم لتحديث عدد المشاهدات لكل مقالة عند فتحها من قبل المستخدمين أو الضيوف، بحيث
+        يُسجل العدد بشكل تلقائي.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">/api/public/news/{id}/add-view</div>
+    </div>
+
+    <!-- ADD CONTENT -->
+    <div class="endpoint">
+      <h2>🔹 إضافة محتوى (أدمن فقط)</h2>
+      <div class="desc">
+        يُتيح للأدمن إنشاء محتوى جديد مثل المقالات أو الأخبار التعليمية. يمكن رفع صورة،
+        عنوان، محتوى، وتحديد إن كانت المقالة خبرية. يمكن أيضاً تعديل أو حذف المحتوى لاحقاً.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/content</div>
+      <pre>multipart: image,title,body,is_news</pre>
+      <span class="method PUT">PUT</span> 
+      <span class="method DELETE">DELETE</span>
+      <div class="endpoint-url">api/content/{id}</div>
+    </div>
+
+    <!-- ADMIN USERS -->
+    <div class="endpoint">
+      <h2>🔹 إدارة المستخدمين غير المفعلين مع Pagination مبسط</h2>
+      <div class="desc">
+        يُستخدم هذا الـ API لعرض قائمة المستخدمين الذين لم يُفعلوا حساباتهم بعد التسجيل. يتم تقسيم النتائج على صفحات.
+      </div>
+      <span class="method GET">GET</span>
+      <div class="endpoint-url">api/show-unactive-users</div>
+      <pre>{
+  "currentPage": 1,
+  "totalPages": 3,
+  "data": [
+    { "email":"user1@example.com", "activate_code":"123456" },
+    { "email":"user2@example.com", "activate_code":"654321" }
+  ]
+}</pre>
+    </div>
+
+    <!-- SEARCH UNACTIVE USERS -->
+    <div class="endpoint">
+      <h2>🔹 البحث عن المستخدمين غير المفعلين بواسطة البريد الإلكتروني مع Pagination مبسط</h2>
+      <div class="desc">
+        يُستخدم هذا الـ API للبحث عن المستخدمين الذين لم يُفعلوا حساباتهم بعد التسجيل بناءً على البريد الإلكتروني. 
+        يُرسل البريد المطلوب البحث عنه في جسم الطلب، ويعيد قائمة بالمستخدمين المطابقين إذا وُجدوا.
+      </div>
+      <span class="method POST">POST</span>
+      <div class="endpoint-url">api/show-unactive-users/search</div>
+      <pre>{
+  "currentPage": 1,
+  "totalPages": 1,
+  "data": [
+    { "email":"user1@example.com", "activate_code":"123456" }
+  ]
+}</pre>
+    </div>
+
+    <!-- MODIFY / DELETE COLLEGES -->
+    <div class="endpoint">
+      <h2>🔹 تعديل وحذف الكليات</h2>
+      <span class="method PUT">PUT</span> <span class="method DELETE">DELETE</span>
+      <div class="endpoint-url">api/college/{id}</div>
+      <div class="desc">
+        يُتيح هذا الـ API للأدمن تعديل بيانات أي كلية أو حذفها. يمكن تعديل أي معلومة مثل اسم الكلية،
+        الجامعة، الأقسام، ومتطلبات القبول. بعد تعديل البيانات يتم حفظ التحديث مباشرة في قاعدة البيانات.
+      </div>
+      <div class="desc">
+        مثال عملي لتعديل كلية موجودة:
+      </div>
+      <pre>
+/api/college/1 
+
+{
+  "collegeName": "كلية الهندسة والتكنولوجيا",
+  "departments": ["قسم الحاسوب", "قسم الكهرباء", "قسم الميكانيك"]
+}</pre>
+      <div class="desc">
+        مثال عملي لحذف كلية:
+      </div>
+      <pre>{
+ /api/college/1 
+}</pre>
+    </div>
+
+  </div>
+</body>
+</html>
